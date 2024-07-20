@@ -27,7 +27,7 @@ export { Options };
 const validate_color = (color: string): boolean =>
     /^[0-9a-f]{3}$/i.test(color) || /^[0-9a-f]{6}$/i.test(color);
 
-class QRCodeInstance {
+export class QRCodeInstance {
     public readonly base_url = 'https://quickchart.io/qr';
 
     /**
