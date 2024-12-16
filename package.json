@@ -1,6 +1,6 @@
 {
   "name": "@gibme/qrcode",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple qrcode helper",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -44,7 +44,7 @@
     }
   },
   "devDependencies": {
-    "@gibme/auto-pack": "^0.4.2",
+    "@gibme/auto-pack": "^0.4.6",
     "@types/mocha": "^10.0.7",
     "@types/node": "^20.14.11",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
