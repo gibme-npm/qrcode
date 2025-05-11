@@ -1,4 +1,4 @@
-// Copyright (c) 2024, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2024-2025, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,79 +19,75 @@
 // SOFTWARE.
 
 import deepmerge from 'deepmerge';
-import { DefaultOptions, Options } from './types';
-
-export { Options };
 
 /** @ignore */
 const validate_color = (color: string): boolean =>
     /^[0-9a-f]{3}$/i.test(color) || /^[0-9a-f]{6}$/i.test(color);
 
-export class QRCodeInstance {
-    public readonly base_url = 'https://quickchart.io/qr';
+export function QRCode (
+    text: string,
+    options: Partial<QRCode.Options> = {}
+): string {
+    const base_url = 'https://quickchart.io/qr';
 
-    /**
-     * Creates a new instance of a QR Code
-     *
-     * @param text
-     * @param _options
-     */
-    constructor (public text: string, private _options: Partial<Options> = {}) {
-        this._options = deepmerge(DefaultOptions, this._options);
+    options = deepmerge(QRCode.DefaultOptions, options);
 
-        if (this._options.light && !validate_color(this._options.light)) {
-            throw new Error('Invalid light color specified');
-        }
-
-        if (this._options.dark && !validate_color(this._options.dark)) {
-            throw new Error('Invalid dark color specified');
-        }
-
-        if (this._options.margin && this._options.size && this._options.margin >= this._options.size) {
-            throw new Error('Margin cannot be larger than size');
-        }
-
-        if (this._options.centerImageSizeRatio &&
-            (this._options.centerImageSizeRatio < 0 || this._options.centerImageSizeRatio > 1)) {
-            throw new Error('Center Image Size Ratio must be between 0 and 1');
-        }
+    if (options.light && !validate_color(options.light)) {
+        throw new Error('Invalid light color specified');
     }
 
-    public get options (): Partial<Options & { text: string }> {
-        return {
-            text: this.text,
-            ...this._options
-        };
+    if (options.dark && !validate_color(options.dark)) {
+        throw new Error('Invalid dark color specified');
     }
 
-    public set options (options: Partial<Options & { text: string }>) {
-        this._options = deepmerge(this._options, options);
+    if (options.margin && options.size && options.margin >= options.size) {
+        throw new Error('Margin cannot be larger than size');
     }
 
-    /**
-     * Returns the url to the qrcode image that is suitable for use in the
-     * `src` attribute of an <img> element
-     */
-    public toString (): string {
-        const params = new URLSearchParams();
-
-        params.set('text', this.text);
-
-        for (const key of Object.keys(this._options)) {
-            params.set(key, this._options[key]);
-        }
-
-        return `${this.base_url}?${params.toString()}`;
+    if (options.centerImageSizeRatio &&
+        (options.centerImageSizeRatio < 0 || options.centerImageSizeRatio > 1)) {
+        throw new Error('Center Image Size Ratio must be between 0 and 1');
     }
+
+    const params = new URLSearchParams();
+
+    params.set('text', text);
+
+    for (const key of Object.keys(options)) {
+        params.set(key, options[key]);
+    }
+
+    return `${base_url}?${params.toString()}`;
 }
 
-/**
- * Constructs a new QR Code instance
- *
- * @param text
- * @param options
- * @constructor
- */
-export const QRCode = (text: string, options: Partial<Options> = {}) => new QRCodeInstance(text, options);
+export namespace QRCode {
+    export type Options = {
+        format: 'png' | 'svg' | 'base64';
+        margin: number;
+        size: number;
+        dark: string;
+        light: string;
+        ecLevel: 'L' | 'M' | 'Q' | 'H';
+        centerImageUrl: `http://${string}` | `https://${string}`;
+        centerImageSizeRatio: number;
+        centerImageWidth: number;
+        centerImageHeight: number;
+        caption: string;
+        captionFontFamily: string;
+        captionFontSize: number;
+    }
+
+    export const DefaultOptions: Partial<Options> = {
+        format: 'png',
+        margin: 4,
+        size: 150,
+        dark: '000000',
+        light: 'ffffff',
+        ecLevel: 'M',
+        centerImageSizeRatio: 0.3,
+        captionFontFamily: 'sans-serif',
+        captionFontSize: 10
+    };
+}
 
 export default QRCode;

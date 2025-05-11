@@ -1,4 +1,4 @@
-// Copyright (c) 2024, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2024-2025, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,9 @@ import QRCode from '../src/index';
 import assert from 'assert';
 
 describe('Unit Tests', () => {
-    const qrcode = QRCode('https://github.com');
+    it('QRCode()', () => {
+        const qrcode = QRCode('https://github.com');
 
-    it('toString()', () => {
-        const url = qrcode.toString();
-
-        assert.ok(url.length !== 0);
+        assert.ok(qrcode.length !== 0);
     });
 });
