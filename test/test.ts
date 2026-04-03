@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { it, describe } from 'mocha';
+import { it, describe } from 'node:test';
 import QRCode from '../src/index';
 import assert from 'assert';
 
